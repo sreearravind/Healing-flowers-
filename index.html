@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#4B188E" />
+  <title>Healing Flowers | Social Booth</title>
+  <style>
+    :root{
+      --purple:#4B188E;
+      --purple2:#6C2CC1;
+      --orange:#F5A000;
+      --cream:#FFF9F2;
+      --ink:#29163F;
+      --muted:#736579;
+      --line:#EADFF0;
+      --white:#fff;
+      --shadow:0 18px 55px rgba(56,24,92,.14);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:
+      radial-gradient(circle at 8% 4%,rgba(245,160,0,.15),transparent 24%),
+      radial-gradient(circle at 90% 8%,rgba(108,44,193,.13),transparent 23%),
+      var(--cream)}
+    body{padding:16px;display:flex;justify-content:center}
+    .app{width:min(100%,560px);padding-bottom:28px}
+    .hero{text-align:center;padding:8px 4px 14px}
+    .logo{width:min(330px,84vw);height:auto;display:block;margin:0 auto 6px}
+    .eyebrow{font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--orange)}
+    h1{font-size:clamp(27px,7vw,38px);margin:5px 0 5px;letter-spacing:-.035em}
+    .sub{margin:0 auto;color:var(--muted);max-width:430px;line-height:1.5;font-size:14px}
+    .card{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+    label{display:block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+    input,select{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 14px;font-size:16px;background:#fff;color:var(--ink);outline:none}
+    input:focus,select:focus{border-color:var(--purple2);box-shadow:0 0 0 3px rgba(108,44,193,.11)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .flavour-preview{display:grid;grid-template-columns:105px 1fr;gap:14px;align-items:center;margin-top:14px;background:#fffaf4;border:1px solid #f2e3cf;border-radius:18px;padding:10px}
+    .flavour-preview img{width:105px;aspect-ratio:4/3;object-fit:cover;border-radius:12px;border:1px solid rgba(75,24,142,.10)}
+    .flavour-title{font-weight:900;font-size:19px;margin-bottom:5px}
+    .tagline{font-family:Georgia,"Times New Roman",serif;font-size:17px;line-height:1.35;color:var(--purple);margin:0 0 7px}
+    .hash{font-size:12px;color:var(--orange);font-weight:800}
+    .stage{position:relative;overflow:hidden;border-radius:28px;background:#171219;aspect-ratio:4/5;box-shadow:var(--shadow);isolation:isolate}
+    video,.result{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    video{transform:scaleX(-1)}
+    .result{display:none}
+    .overlay{position:absolute;inset:0;z-index:3;pointer-events:none;color:#fff;padding:24px 20px;display:flex;flex-direction:column;justify-content:space-between;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+    .overlay:before{content:"";position:absolute;inset:12px;border:2px solid rgba(255,255,255,.92);border-radius:22px;box-shadow:inset 0 0 0 2px rgba(245,160,0,.25)}
+    .overlay:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(to bottom,rgba(40,12,70,.42),transparent 27%,transparent 65%,rgba(35,11,60,.72))}
+    .top,.bottom{position:relative;z-index:2}
+    .brand-mini{display:inline-flex;align-items:center;gap:8px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;font-size:13px}
+    .brand-dot{width:10px;height:10px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px rgba(245,160,0,.18)}
+    .overlay-product{margin-top:7px;font-size:13px;font-weight:700}
+    .overlay-name{font-size:clamp(22px,5.7vw,30px);font-weight:900;line-height:1.08;margin-bottom:7px}
+    .overlay-line{font-family:Georgia,"Times New Roman",serif;font-size:17px;line-height:1.25;max-width:90%}
+    .overlay-hash{margin-top:8px;font-size:12px;font-weight:900;color:#ffd98d;text-transform:uppercase;letter-spacing:.06em}
+    .lotus{position:absolute;right:23px;bottom:72px;font-size:34px}
+    .status{position:absolute;z-index:5;left:50%;top:50%;transform:translate(-50%,-50%);width:78%;background:rgba(25,12,32,.62);color:#fff;padding:14px 16px;border-radius:15px;text-align:center;line-height:1.45;font-size:14px;backdrop-filter:blur(8px)}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+    button{min-height:49px;border:0;border-radius:15px;font-weight:900;font-size:15px;cursor:pointer;padding:13px 16px}
+    .primary{background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff}
+    .orange{background:var(--orange);color:#fff}
+    .soft{background:#fff;color:var(--ink);border:1px solid var(--line)}
+    .wide{grid-column:1/-1}
+    button:disabled{opacity:.45;cursor:not-allowed}
+    .note{text-align:center;color:var(--muted);font-size:12px;line-height:1.5;margin:12px 8px}
+    .privacy{font-size:12px;line-height:1.5;color:#6c5d71;background:#fffaf4;border:1px dashed #e9d0a5;border-radius:16px;padding:12px 14px}
+    footer{text-align:center;color:#97869d;font-size:11px;padding-top:15px}
+    .toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;background:#211325;color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;transition:.22s;z-index:99;text-align:center;max-width:90vw;pointer-events:none}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    @media(max-width:430px){body{padding:11px}.card{padding:13px}.grid{grid-template-columns:1fr}.flavour-preview{grid-template-columns:88px 1fr}.flavour-preview img{width:88px}.actions{grid-template-columns:1fr}.wide{grid-column:auto}}
+  </style>
+</head>
+<body>
+<main class="app">
+  <header class="hero">
+    <img class="logo" src="assets/healing-flowers-logo.jpg" alt="Healing Flowers" />
+    <div class="eyebrow">Your moment. Your light.</div>
+    <h1>Healing Flowers Social Booth</h1>
+    <p class="sub">Choose your candle, open the camera, and create a share-ready Healing Flowers moment.</p>
+  </header>
+
+  <section class="card">
+    <div class="grid">
+      <div>
+        <label for="name">Your name</label>
+        <input id="name" maxlength="24" placeholder="e.g. Priya" autocomplete="name" />
+      </div>
+      <div>
+        <label for="flavour">Choose your candle</label>
+        <select id="flavour">
+          <option value="manifesting">Manifesting</option>
+          <option value="stillness">Stillness Speaks</option>
+          <option value="vitality">Vitality</option>
+          <option value="holyspace">Holyspace</option>
+          <option value="harmony">Harmony</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="flavour-preview">
+      <img id="flavourImage" src="assets/manifesting.jpg" alt="Selected Healing Flowers candle" />
+      <div>
+        <div class="flavour-title" id="flavourTitle">Manifesting</div>
+        <p class="tagline" id="tagline">Set the intention. Light the moment.</p>
+        <div class="hash">#HealingFlowers</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="stage">
+    <video id="video" playsinline autoplay muted></video>
+    <img id="result" class="result" alt="Your Healing Flowers photo" />
+
+    <div class="overlay">
+      <div class="top">
+        <div class="brand-mini"><span class="brand-dot"></span> Healing Flowers</div>
+        <div class="overlay-product" id="overlayProduct">Manifesting</div>
+      </div>
+
+      <div class="bottom">
+        <div class="overlay-name" id="overlayName">My Healing Flowers Moment</div>
+        <div class="overlay-line" id="overlayTagline">Set the intention. Light the moment.</div>
+        <div class="overlay-hash">#HealingFlowers</div>
+      </div>
+      <div class="lotus">✦</div>
+    </div>
+
+    <div class="status" id="status">Tap <strong>Start Camera</strong> and allow camera access.</div>
+  </section>
+
+  <section class="actions">
+    <button class="primary wide" id="start">Start Camera</button>
+    <button class="orange" id="capture" disabled>Take Photo</button>
+    <button class="soft" id="retake" disabled>Retake</button>
+    <button class="soft" id="download" disabled>Download</button>
+    <button class="primary" id="share" disabled>Share</button>
+  </section>
+
+  <p class="note">For Instagram, tap <strong>Share</strong>. If Instagram does not appear, download the photo and upload it from your gallery.</p>
+  <div class="privacy"><strong>Privacy:</strong> your photo is composed locally in your browser. This version does not upload or store your selfie.</div>
+  <footer>Healing Flowers · Handpoured · Natural · Mindful</footer>
+</main>
+
+<canvas id="canvas" hidden></canvas>
+<div class="toast" id="toast"></div>
+
+<script>
+const FLAVOURS={
+  manifesting:{
+    name:"Manifesting",
+    image:"assets/manifesting.jpg",
+    tagline:"Set the intention. Light the moment."
+  },
+  stillness:{
+    name:"Stillness Speaks",
+    image:"assets/stillness-speaks.jpg",
+    tagline:"Quiet the noise. Let stillness speak."
+  },
+  vitality:{
+    name:"Vitality",
+    image:"assets/vitality.jpg",
+    tagline:"Light up your energy."
+  },
+  holyspace:{
+    name:"Holyspace",
+    image:"assets/holyspace.jpg",
+    tagline:"Make room for what feels sacred."
+  },
+  harmony:{
+    name:"Harmony",
+    image:"assets/harmony.jpg",
+    tagline:"Find your balance. Glow in it."
+  }
+};
+
+const els={
+  name:document.getElementById("name"),
+  flavour:document.getElementById("flavour"),
+  flavourImage:document.getElementById("flavourImage"),
+  flavourTitle:document.getElementById("flavourTitle"),
+  tagline:document.getElementById("tagline"),
+  overlayProduct:document.getElementById("overlayProduct"),
+  overlayName:document.getElementById("overlayName"),
+  overlayTagline:document.getElementById("overlayTagline"),
+  video:document.getElementById("video"),
+  result:document.getElementById("result"),
+  status:document.getElementById("status"),
+  start:document.getElementById("start"),
+  capture:document.getElementById("capture"),
+  retake:document.getElementById("retake"),
+  download:document.getElementById("download"),
+  share:document.getElementById("share"),
+  canvas:document.getElementById("canvas"),
+  toast:document.getElementById("toast")
+};
+
+let stream=null, finalBlob=null, finalUrl=null;
+
+function toast(msg){
+  els.toast.textContent=msg;
+  els.toast.classList.add("show");
+  clearTimeout(toast.t);
+  toast.t=setTimeout(()=>els.toast.classList.remove("show"),2300);
+}
+
+function activeFlavour(){return FLAVOURS[els.flavour.value];}
+
+function updateUI(){
+  const f=activeFlavour();
+  const n=els.name.value.trim();
+  els.flavourImage.src=f.image;
+  els.flavourTitle.textContent=f.name;
+  els.tagline.textContent=f.tagline;
+  els.overlayProduct.textContent=f.name;
+  els.overlayTagline.textContent=f.tagline;
+  els.overlayName.textContent=n ? `${n}'s Healing Flowers Moment` : "My Healing Flowers Moment";
+}
+
+els.name.addEventListener("input",updateUI);
+els.flavour.addEventListener("change",updateUI);
+
+// QR-ready URLs:
+// index.html?flavour=harmony
+// index.html?flavour=vitality&name=Priya
+const qp=new URLSearchParams(location.search);
+const qFlavour=(qp.get("flavour")||"").toLowerCase();
+const qName=qp.get("name");
+if(FLAVOURS[qFlavour]) els.flavour.value=qFlavour;
+if(qName) els.name.value=qName.slice(0,24);
+updateUI();
+
+async function startCamera(){
+  if(!navigator.mediaDevices?.getUserMedia){
+    els.status.innerHTML="Camera access requires a modern browser and an <strong>HTTPS</strong> page.";
+    return;
+  }
+  try{
+    if(stream) stream.getTracks().forEach(t=>t.stop());
+    stream=await navigator.mediaDevices.getUserMedia({
+      video:{facingMode:"user",width:{ideal:1080},height:{ideal:1350}},
+      audio:false
+    });
+    els.video.srcObject=stream;
+    await els.video.play();
+    els.status.style.display="none";
+    els.result.style.display="none";
+    els.video.style.display="block";
+    els.capture.disabled=false;
+    els.retake.disabled=true;
+    els.download.disabled=true;
+    els.share.disabled=true;
+    els.start.textContent="Restart Camera";
+  }catch(err){
+    console.error(err);
+    els.status.style.display="block";
+    els.status.textContent="Camera access was blocked. Allow camera permission for this site in your browser settings and try again.";
+  }
+}
+
+function roundedRect(ctx,x,y,w,h,r){
+  const rr=Math.min(r,w/2,h/2);
+  ctx.beginPath();ctx.moveTo(x+rr,y);ctx.arcTo(x+w,y,x+w,y+h,rr);
+  ctx.arcTo(x+w,y+h,x,y+h,rr);ctx.arcTo(x,y+h,x,y,rr);
+  ctx.arcTo(x,y,x+w,y,rr);ctx.closePath();
+}
+
+function drawCover(ctx,source,sw,sh,dw,dh){
+  const sr=sw/sh, dr=dw/dh;
+  let sx=0,sy=0,cw=sw,ch=sh;
+  if(sr>dr){cw=sh*dr;sx=(sw-cw)/2}else{ch=sw/dr;sy=(sh-ch)/2}
+  ctx.save();ctx.translate(dw,0);ctx.scale(-1,1);
+  ctx.drawImage(source,sx,sy,cw,ch,0,0,dw,dh);ctx.restore();
+}
+
+function fitText(ctx,text,maxWidth,startSize,minSize,fontFamily="system-ui"){
+  let size=startSize;
+  do{
+    ctx.font=`900 ${size}px ${fontFamily}`;
+    if(ctx.measureText(text).width<=maxWidth) break;
+    size-=2;
+  }while(size>minSize);
+  return size;
+}
+
+async function capture(){
+  if(!els.video.videoWidth){toast("Camera is still starting.");return}
+  const W=1080,H=1350,ctx=els.canvas.getContext("2d"),f=activeFlavour(),n=els.name.value.trim();
+  els.canvas.width=W;els.canvas.height=H;
+  drawCover(ctx,els.video,els.video.videoWidth,els.video.videoHeight,W,H);
+
+  let g=ctx.createLinearGradient(0,0,0,330);
+  g.addColorStop(0,"rgba(55,15,92,.55)");g.addColorStop(1,"rgba(55,15,92,0)");
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,330);
+  g=ctx.createLinearGradient(0,H-480,0,H);
+  g.addColorStop(0,"rgba(40,12,70,0)");g.addColorStop(1,"rgba(40,12,70,.78)");
+  ctx.fillStyle=g;ctx.fillRect(0,H-480,W,480);
+
+  ctx.strokeStyle="rgba(255,255,255,.94)";ctx.lineWidth=6;
+  roundedRect(ctx,32,32,W-64,H-64,42);ctx.stroke();
+  ctx.strokeStyle="rgba(245,160,0,.65)";ctx.lineWidth=3;
+  roundedRect(ctx,45,45,W-90,H-90,36);ctx.stroke();
+
+  ctx.fillStyle="#F5A000";ctx.beginPath();ctx.arc(73,85,10,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle="#fff";ctx.textAlign="left";ctx.textBaseline="top";
+  ctx.font="900 32px system-ui";ctx.fillText("HEALING FLOWERS",96,67);
+  ctx.font="700 27px system-ui";ctx.fillText(f.name,64,120);
+
+  const moment=n?`${n}'s Healing Flowers Moment`:"My Healing Flowers Moment";
+  fitText(ctx,moment,W-128,58,38);
+  ctx.fillStyle="#fff";ctx.fillText(moment,64,H-295);
+
+  ctx.font="italic 38px Georgia, serif";ctx.fillText(f.tagline,64,H-213);
+  ctx.fillStyle="#FFD98D";ctx.font="900 26px system-ui";ctx.fillText("#HealingFlowers",64,H-125);
+
+  finalBlob=await new Promise(r=>els.canvas.toBlob(r,"image/jpeg",.93));
+  if(finalUrl) URL.revokeObjectURL(finalUrl);
+  finalUrl=URL.createObjectURL(finalBlob);
+  els.result.src=finalUrl;els.result.style.display="block";els.video.style.display="none";
+  els.capture.disabled=true;els.retake.disabled=false;els.download.disabled=false;els.share.disabled=false;
+  toast("Your Healing Flowers moment is ready ✨");
+}
+
+function retake(){
+  els.result.style.display="none";els.video.style.display="block";
+  els.capture.disabled=false;els.retake.disabled=true;els.download.disabled=true;els.share.disabled=true;
+}
+
+function filename(){
+  return `healing-flowers-${els.flavour.value}.jpg`;
+}
+
+function download(){
+  if(!finalUrl)return;
+  const a=document.createElement("a");a.href=finalUrl;a.download=filename();
+  document.body.appendChild(a);a.click();a.remove();
+}
+
+async function share(){
+  if(!finalBlob)return;
+  const f=activeFlavour();
+  const file=new File([finalBlob],filename(),{type:"image/jpeg"});
+  const text=`${f.tagline} #HealingFlowers`;
+  try{
+    if(navigator.canShare?.({files:[file]})){
+      await navigator.share({files:[file],title:`Healing Flowers · ${f.name}`,text});
+    }else if(navigator.share){
+      await navigator.share({title:`Healing Flowers · ${f.name}`,text});
+      toast("If the image was not attached, use Download and share from your gallery.");
+    }else{
+      download();toast("Photo downloaded. Share it from your gallery.");
+    }
+  }catch(e){
+    if(e.name!=="AbortError"){console.error(e);toast("Sharing was unavailable. Please use Download.");}
+  }
+}
+
+els.start.addEventListener("click",startCamera);
+els.capture.addEventListener("click",capture);
+els.retake.addEventListener("click",retake);
+els.download.addEventListener("click",download);
+els.share.addEventListener("click",share);
+window.addEventListener("beforeunload",()=>{if(stream)stream.getTracks().forEach(t=>t.stop());if(finalUrl)URL.revokeObjectURL(finalUrl)});
+</script>
+</body>
+</html>
