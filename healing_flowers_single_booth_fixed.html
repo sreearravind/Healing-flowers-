@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#4B188E" />
+<title>Healing Flowers | Social Booth</title>
+<style>
+:root{
+  --purple:#4B188E;--purple2:#6C2CC1;--orange:#F5A000;--cream:#FFF9F2;--ink:#29163F;
+  --muted:#736579;--line:#EADFF0;--shadow:0 18px 55px rgba(56,24,92,.14);--radius:24px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:
+  radial-gradient(circle at 8% 4%,rgba(245,160,0,.15),transparent 24%),
+  radial-gradient(circle at 90% 8%,rgba(108,44,193,.13),transparent 23%),var(--cream)}
+body{padding:16px;display:flex;justify-content:center}
+.app{width:min(100%,580px);padding-bottom:28px}
+.hero{text-align:center;padding:8px 4px 14px}
+.logo{width:min(330px,84vw);height:auto;display:block;margin:0 auto 6px}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--orange)}
+h1{font-size:clamp(27px,7vw,38px);margin:5px 0;letter-spacing:-.035em}
+.sub{margin:0 auto;color:var(--muted);max-width:450px;line-height:1.5;font-size:14px}
+.card{background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+label{display:block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+input{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 14px;font-size:16px;background:#fff;color:var(--ink);outline:none}
+input:focus{border-color:var(--purple2);box-shadow:0 0 0 3px rgba(108,44,193,.11)}
+.stage{position:relative;overflow:hidden;border-radius:28px;background:#171219;aspect-ratio:1229/1536;box-shadow:var(--shadow);isolation:isolate}
+.camera-layer,.result,.frame-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.camera-layer{transform:scaleX(-1);z-index:1}
+.frame-layer{object-fit:contain;z-index:3;pointer-events:none}
+.result{display:none;z-index:5;object-fit:contain;background:#fff8f3}
+.live-name{
+  position:absolute;left:24%;right:24%;top:74%;z-index:4;text-align:center;pointer-events:none;
+  font-weight:800;font-size:clamp(16px,4vw,26px);color:#4B188E;text-shadow:0 1px 2px rgba(255,255,255,.95);
+  background:rgba(255,255,255,.65);border:1px solid rgba(108,44,193,.15);padding:8px 12px;border-radius:999px;
+  backdrop-filter:blur(2px);
+}
+.status{position:absolute;z-index:6;left:50%;top:50%;transform:translate(-50%,-50%);width:72%;background:rgba(25,12,32,.66);color:#fff;padding:14px 16px;border-radius:15px;text-align:center;line-height:1.45;font-size:14px;backdrop-filter:blur(8px)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+button{min-height:49px;border:0;border-radius:15px;font-weight:900;font-size:15px;cursor:pointer;padding:13px 16px}
+.primary{background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff}.orange{background:var(--orange);color:#fff}.soft{background:#fff;color:var(--ink);border:1px solid var(--line)}.wide{grid-column:1/-1}
+button:disabled{opacity:.45;cursor:not-allowed}.note{text-align:center;color:var(--muted);font-size:12px;line-height:1.5;margin:12px 8px}.privacy{font-size:12px;line-height:1.5;color:#6c5d71;background:#fffaf4;border:1px dashed #e9d0a5;border-radius:16px;padding:12px 14px}footer{text-align:center;color:#97869d;font-size:11px;padding-top:15px}.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;background:#211325;color:#fff;padding:10px 16px;border-radius:999px;font-size:13px;transition:.22s;z-index:99;text-align:center;max-width:90vw;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:430px){body{padding:11px}.card{padding:13px}.actions{grid-template-columns:1fr}.wide{grid-column:auto}.live-name{left:18%;right:18%;top:73.5%;font-size:16px}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="hero">
+  <img class="logo" src="assets/healing-flowers-logo.jpg" alt="Healing Flowers">
+  <div class="eyebrow">Your moment. Your light.</div>
+  <h1>Healing Flowers Social Booth</h1>
+  <p class="sub">Open the camera and capture your moment inside the Healing Flowers floral frame.</p>
+</header>
+<section class="card">
+  <label for="name">Your name</label>
+  <input id="name" maxlength="24" placeholder="e.g. Priya" autocomplete="name">
+</section>
+<section class="stage">
+  <video id="video" class="camera-layer" playsinline autoplay muted></video>
+  <img id="frame" class="frame-layer" src="assets/healing-flowers-frame.png" alt="Healing Flowers floral frame">
+  <div id="liveName" class="live-name">Your Name</div>
+  <img id="result" class="result" alt="Your Healing Flowers photo">
+  <div class="status" id="status">Tap <strong>Start Camera</strong> and allow camera access.</div>
+</section>
+<section class="actions">
+  <button class="primary wide" id="start">Start Camera</button>
+  <button class="orange" id="capture" disabled>Take Photo</button>
+  <button class="soft" id="retake" disabled>Retake</button>
+  <button class="soft" id="download" disabled>Download</button>
+  <button class="primary" id="share" disabled>Share</button>
+</section>
+<p class="note">For Instagram, tap <strong>Share</strong>. If Instagram does not appear, download the photo and upload it from your gallery.</p>
+<div class="privacy"><strong>Privacy:</strong> the selfie is composed locally in your browser and is not uploaded by this page.</div>
+<footer>Healing Flowers · Handpoured · Natural · Mindful</footer>
+</main>
+<canvas id="canvas" hidden></canvas><div class="toast" id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+const E={name:$('name'),video:$('video'),frame:$('frame'),liveName:$('liveName'),result:$('result'),status:$('status'),start:$('start'),capture:$('capture'),retake:$('retake'),download:$('download'),share:$('share'),canvas:$('canvas'),toast:$('toast')};
+let stream=null,finalBlob=null,finalUrl=null;
+const FRAME_SRC='assets/healing-flowers-frame.png';
+const FRAME_W=1229, FRAME_H=1536;
+const PHOTO_X=247, PHOTO_Y=362, PHOTO_W=736, PHOTO_H=831;
+function toast(msg){E.toast.textContent=msg;E.toast.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>E.toast.classList.remove('show'),2300)}
+function displayName(){const n=E.name.value.trim();return n?n:'Your Name'}
+function updateUI(){E.liveName.textContent=displayName()}
+E.name.addEventListener('input',updateUI);updateUI();
+async function startCamera(){
+  if(!navigator.mediaDevices?.getUserMedia){E.status.innerHTML='Camera access requires an <strong>HTTPS</strong> page.';return}
+  try{
+    if(stream)stream.getTracks().forEach(t=>t.stop());
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:1080},height:{ideal:1350}},audio:false});
+    E.video.srcObject=stream; await E.video.play();
+    E.status.style.display='none'; E.result.style.display='none'; E.video.style.display='block'; E.frame.style.display='block'; E.liveName.style.display='block';
+    E.capture.disabled=false; E.retake.disabled=true; E.download.disabled=true; E.share.disabled=true; E.start.textContent='Restart Camera';
+  }catch(err){console.error(err);E.status.style.display='block';E.status.textContent='Camera access was blocked. Allow camera permission for this site and try again.'}
+}
+function drawCover(ctx,source,sw,sh,dx,dy,dw,dh){
+  const sr=sw/sh, dr=dw/dh; let sx=0,sy=0,cw=sw,ch=sh;
+  if(sr>dr){cw=sh*dr; sx=(sw-cw)/2;} else {ch=sw/dr; sy=(sh-ch)/2;}
+  ctx.save(); ctx.translate(dx+dw,dy); ctx.scale(-1,1); ctx.drawImage(source,sx,sy,cw,ch,0,0,dw,dh); ctx.restore();
+}
+function loadImage(src){return new Promise((res,rej)=>{const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=src;});}
+async function capture(){
+  if(!E.video.videoWidth){toast('Camera is still starting.');return}
+  try{
+    const frame=await loadImage(FRAME_SRC);
+    const ctx=E.canvas.getContext('2d'); E.canvas.width=FRAME_W; E.canvas.height=FRAME_H;
+    ctx.clearRect(0,0,FRAME_W,FRAME_H);
+    ctx.fillStyle='#fff8f3'; ctx.fillRect(0,0,FRAME_W,FRAME_H);
+    drawCover(ctx,E.video,E.video.videoWidth,E.video.videoHeight,PHOTO_X,PHOTO_Y,PHOTO_W,PHOTO_H);
+    // name badge inside photo opening
+    const n=E.name.value.trim();
+    if(n){
+      const text=n; ctx.font='700 26px system-ui';
+      const metrics=ctx.measureText(text); const padX=28, padY=14; const boxW=metrics.width+padX*2, boxH=52;
+      const boxX=(FRAME_W-boxW)/2, boxY=PHOTO_Y+PHOTO_H-78;
+      ctx.fillStyle='rgba(255,255,255,0.78)';
+      const r=26; ctx.beginPath();
+      ctx.moveTo(boxX+r,boxY); ctx.arcTo(boxX+boxW,boxY,boxX+boxW,boxY+boxH,r); ctx.arcTo(boxX+boxW,boxY+boxH,boxX,boxY+boxH,r); ctx.arcTo(boxX,boxY+boxH,boxX,boxY,r); ctx.arcTo(boxX,boxY,boxX+boxW,boxY,r); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle='rgba(108,44,193,.22)'; ctx.lineWidth=1.5; ctx.stroke();
+      ctx.fillStyle='#4B188E'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(text,FRAME_W/2,boxY+boxH/2+1);
+    }
+    ctx.drawImage(frame,0,0,FRAME_W,FRAME_H);
+    finalBlob=await new Promise(r=>E.canvas.toBlob(r,'image/png'));
+    if(finalUrl) URL.revokeObjectURL(finalUrl); finalUrl=URL.createObjectURL(finalBlob);
+    E.result.src=finalUrl; E.result.style.display='block'; E.video.style.display='none'; E.frame.style.display='none'; E.liveName.style.display='none';
+    E.capture.disabled=true; E.retake.disabled=false; E.download.disabled=false; E.share.disabled=false; toast('Your framed Healing Flowers moment is ready ✨');
+  }catch(err){console.error(err);toast('Please upload the fixed transparent frame as assets/healing-flowers-frame.png');}
+}
+function retake(){E.result.style.display='none'; E.video.style.display='block'; E.frame.style.display='block'; E.liveName.style.display='block'; E.capture.disabled=false; E.retake.disabled=true; E.download.disabled=true; E.share.disabled=true}
+function filename(){return 'healing-flowers-moment.png'}
+function download(){if(!finalUrl)return;const a=document.createElement('a');a.href=finalUrl;a.download=filename();document.body.appendChild(a);a.click();a.remove()}
+async function share(){if(!finalBlob)return;const file=new File([finalBlob],filename(),{type:'image/png'});try{if(navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'Healing Flowers Moment',text:'Bloom gently. Shine naturally. #HealingFlowers'});}else{download();toast('Photo downloaded. Share it from your gallery.')}}catch(e){if(e.name!=='AbortError'){console.error(e);toast('Please use Download to share the photo.')}}}
+E.start.addEventListener('click',startCamera); E.capture.addEventListener('click',capture); E.retake.addEventListener('click',retake); E.download.addEventListener('click',download); E.share.addEventListener('click',share);
+window.addEventListener('beforeunload',()=>{if(stream)stream.getTracks().forEach(t=>t.stop());if(finalUrl)URL.revokeObjectURL(finalUrl)});
+</script>
+</body>
+</html>
